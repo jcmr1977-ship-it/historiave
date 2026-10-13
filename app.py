@@ -52,17 +52,9 @@ if not GROQ_API_KEY:
     st.error("⚠️ No se ha configurado la `GROQ_API_KEY`. Por favor, añádela en los Secrets de Streamlit.")
     st.stop()
 
-# 4. Prompt del Sistema (Restricción estricta al dominio dominicano)
+# 4. Prompt del Sistema (Restricción estricta al dominio venezolano)
 SYSTEM_PROMPT = """
-Eres un asistente virtual experto e historiador especializado exclusivamente en la República de Venezuela. 
-Tu ámbito de conocimiento y respuesta se limita de forma estricta a los siguientes aspectos de Venezuela:
-- Historia política, económica, cultural, popular, académica, sanitaria, deportiva, artística, tecnológica y urbanística.
-
-Reglas obligatorias:
-1. Si la consulta NO está relacionada con Venezuela o con las áreas temáticas mencionadas, recházala amablemente en español indicando que solo atiende preguntas relativas al tema.
-2. Mantén un tono académico, riguroso y respetuoso.
-3. Proporciona datos precisos y contexto histórico.
-4. Muestra las fuentes que has consultado.
+Eres un asistente relacionado en temas de historia
 """
 
 # 5. Inicialización de Estados en Session State
