@@ -82,19 +82,19 @@ def load_gemini_model():
 
 model = load_gemini_model()
 
-# 5. Interfaz Gráfica de Usuario (UI)
-st.title("🇩🇴 Asistente Histórico y Cultural de Venezuela")
-st.markdown("Pregúntame sobre la historia política, economía, cultura, deporte, urbanismo y más de Venezuela.")
+# 5. Inicialización de Estados en Session State
+if "current_question" not in st.session_state:
+    st.session_state.current_question = ""
+if "current_response" not in st.session_state:
+    st.session_state.current_response = ""
 
-# Inicializar historial de chat en el session_state de Streamlit
-if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {
-            "role": "model", 
-            "content": "¡Saludos! Estoy a tu disposición para conversar sobre la historia, la cultura, la economía, el arte y los hitos de Venezuela. ¿Qué te gustaría explorar hoy?"
-        }
-    ]
+# --- ORDEN VISUAL DE LA INTERFAZ ---
 
+# A. TÍTULO PRINCIPAL
+st.title("🇩🇴 Asistente Histórico y Cultural de la República Dominicana")
+
+# B. SUBTÍTULO
+st.markdown("Consulta un tema a la vez sobre historia, economía, cultura, deporte, urbanismo y más. Impulsado por Groq.")
 
 # C. CAJA DE TEXTO DE LA PREGUNTA
 user_input = st.text_input("Escribe tu pregunta sobre la República Dominicana:", value="", key="input_pregunta")
