@@ -91,20 +91,20 @@ if "current_response" not in st.session_state:
 # --- ORDEN VISUAL DE LA INTERFAZ ---
 
 # A. TÍTULO PRINCIPAL
-st.title("🇩🇴 Asistente Histórico y Cultural de la República Dominicana")
+st.title("🇩🇴 Asistente Histórico y Cultural de Venezuela")
 
 # B. SUBTÍTULO
-st.markdown("Consulta un tema a la vez sobre historia, economía, cultura, deporte, urbanismo y más. Impulsado por Groq.")
+st.markdown("Consulta un tema a la vez sobre historia, economía, cultura, deporte, urbanismo y más. Impulsado por Gemini.")
 
 # C. CAJA DE TEXTO DE LA PREGUNTA
-user_input = st.text_input("Escribe tu pregunta sobre la República Dominicana:", value="", key="input_pregunta")
+user_input = st.text_input("Escribe tu pregunta sobre Venezuela:", value="", key="input_pregunta")
 
 if st.button("Consultar", type="primary"):
     if user_input.strip():
         st.session_state.current_question = user_input
-        with st.spinner("Consultando con Groq..."):
+        with st.spinner("Consultando con Gemini..."):
             try:
-                client = Groq(api_key=GROQ_API_KEY)
+                #client = Groq(api_key=GROQ_API_KEY)
                 chat_completion = client.chat.completions.create(
                     messages=[
                         {"role": "system", "content": SYSTEM_PROMPT},
