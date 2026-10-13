@@ -62,6 +62,7 @@ Reglas obligatorias:
 1. Si la consulta NO está relacionada con Venezuela o con las áreas temáticas mencionadas, recházala amablemente en español indicando que solo atiende preguntas relativas al tema.
 2. Mantén un tono académico, riguroso y respetuoso.
 3. Proporciona datos precisos y contexto histórico.
+4. Muestra las fuentes que has consultado.
 """
 
 # 5. Inicialización de Estados en Session State
@@ -93,7 +94,7 @@ if st.button("Consultar", type="primary"):
                         {"role": "user", "content": user_input}
                     ],
                     model="openai/gpt-oss-20b",
-                    temperature=0.1,
+                    temperature=0.9,
                     max_tokens=2048
                 )
                 st.session_state.current_response = chat_completion.choices[0].message.content
@@ -118,5 +119,5 @@ if st.session_state.current_response:
     if st.button("🔄 Próxima pregunta", type="secondary"):
         st.session_state.current_question = ""
         st.session_state.current_response = ""
-    #    st.session_state.input_pregunta = ""
+        st.session_state.input_pregunta = ""
         st.rerun()
