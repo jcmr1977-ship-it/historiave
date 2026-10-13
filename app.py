@@ -93,7 +93,7 @@ if st.button("Consultar", type="primary"):
                         {"role": "user", "content": user_input}
                     ],
                     model="openai/gpt-oss-20b",
-                    temperature=0.3,
+                    temperature=0.1,
                     max_tokens=2048
                 )
                 st.session_state.current_response = chat_completion.choices[0].message.content
