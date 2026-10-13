@@ -95,38 +95,46 @@ if "messages" not in st.session_state:
         }
     ]
 
-# Mostrar mensajes anteriores en pantalla
-for message in st.session_state.messages:
-    avatar = "🇩🇴" if message["role"] == "model" else "👤"
-    with st.chat_message(message["role"], avatar=avatar):
-        st.markdown(message["content"])
 
-# 6. Manejo de la Entrada del Usuario y Comunicación con la API
-if prompt := st.chat_input("Escribe tu pregunta sobre Venezuela..."):
-    # Agregar y mostrar mensaje del usuario
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user", avatar="👤"):
-        st.markdown(prompt)
+# C. CAJA DE TEXTO DE LA PREGUNTA
+user_input = st.text_input("Escribe tu pregunta sobre la República Dominicana:", value="", key="input_pregunta")
 
-    # Generar respuesta del asistente utilizando el historial de chat para mantener contexto
-    with st.chat_message("model", avatar="🇩🇴"):
-        with st.spinner("Consultando archivos históricos..."):
+if st.button("Consultar", type="primary"):
+    if user_input.strip():
+        st.session_state.current_question = user_input
+        with st.spinner("Consultando con Groq..."):
             try:
-                # Formatear el historial para el SDK de Gemini
-                chat_history_formatted = [
-                    {"role": m["role"], "parts": [m["content"]]} 
-                    for m in st.session_state.messages[:-1]
-                ]
-                
-                chat_session = model.start_chat(history=chat_history_formatted)
-                response = chat_session.send_message(prompt)
-                bot_response = response.text
-
-                st.markdown(bot_response)
-                
-                # Guardar la respuesta en el historial
-                st.session_state.messages.append({"role": "model", "content": bot_response})
-                
+                client = Groq(api_key=GROQ_API_KEY)
+                chat_completion = client.chat.completions.create(
+                    messages=[
+                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "user", "content": user_input}
+                    ],
+                    model="openai/gpt-oss-20b",
+                    temperature=0.3,
+                    max_tokens=2048
+                )
+                st.session_state.current_response = chat_completion.choices[0].message.content
             except Exception as e:
-                error_msg = f"Ocurrió un error al procesar tu solicitud con la API de Gemini: {e}"
-                st.error(error_msg)
+                st.session_state.current_response = f"❌ Ocurrió un error al procesar tu solicitud con Groq: {e}"
+    else:
+        st.warning("Por favor, escribe una pregunta antes de consultar.")
+
+# D. RESPUESTA ABAJO (Si ya fue consultada)
+if st.session_state.current_response:
+    st.markdown("---")
+    st.subheader("📌 Pregunta realizada:")
+    st.markdown(f'<div class="custom-box"><b>{st.session_state.current_question}</b></div>', unsafe_allow_html=True)
+    
+    st.subheader("🇩🇴 Respuesta:")
+    st.markdown(f'<div class="custom-box">{st.session_state.current_response}</div>', unsafe_allow_html=True)
+    st.caption("⚡ Estos es una IA y puede cometer errores. *Generado mediante Groq (openai/gpt-oss-20b)*")
+   
+    st.markdown("---")
+    
+    # E. BOTÓN DE PRÓXIMA PREGUNTA (Abajo de todo)
+    if st.button("🔄 Próxima pregunta", type="secondary"):
+        st.session_state.current_question = ""
+        st.session_state.current_response = ""
+    #    st.session_state.input_pregunta = ""
+        st.rerun()
