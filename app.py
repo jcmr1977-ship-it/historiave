@@ -83,15 +83,15 @@ def load_gemini_model():
 model = load_gemini_model()
 
 # 5. Interfaz Gráfica de Usuario (UI)
-st.title("🇩🇴 Asistente Histórico y Cultural de la República Dominicana")
-st.markdown("Pregúntame sobre la historia política, economía, cultura, deporte, urbanismo y más de la República Dominicana.")
+st.title("🇩🇴 Asistente Histórico y Cultural de Venezuela")
+st.markdown("Pregúntame sobre la historia política, economía, cultura, deporte, urbanismo y más de Venezuela.")
 
 # Inicializar historial de chat en el session_state de Streamlit
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {
             "role": "model", 
-            "content": "¡Saludos! Estoy a tu disposición para conversar sobre la historia, la cultura, la economía, el arte y los hitos de la República Dominicana. ¿Qué te gustaría explorar hoy?"
+            "content": "¡Saludos! Estoy a tu disposición para conversar sobre la historia, la cultura, la economía, el arte y los hitos de Venezuela. ¿Qué te gustaría explorar hoy?"
         }
     ]
 
@@ -102,7 +102,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # 6. Manejo de la Entrada del Usuario y Comunicación con la API
-if prompt := st.chat_input("Escribe tu pregunta sobre la República Dominicana..."):
+if prompt := st.chat_input("Escribe tu pregunta sobre Venezuela..."):
     # Agregar y mostrar mensaje del usuario
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user", avatar="👤"):
