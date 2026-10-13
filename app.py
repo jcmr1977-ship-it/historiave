@@ -18,7 +18,7 @@ def get_base64_image(image_path):
     return ""
 
 # Reemplaza 'fondo_marca_agua.png' por el nombre exacto de tu archivo de imagen en el repositorio
-img_base64 = get_base64_image("venezueia.jpeg")
+img_base64 = get_base64_image("venezolaria.jpeg")
 
 # 2. Inyección de CSS para la marca de agua y legibilidad
 if img_base64:
