@@ -7,28 +7,49 @@ st.set_page_config(
     layout="centered"
 )
 
+# --- GOOGLE ANALYTICS (INYECCIÓN EN EL HEAD REAL) ---
+GOOGLE_ANALYTICS_ID = "G-YCZN022HR5"
+
+components.html(
+    f"""
+    <script>
+    (function() {{
+        var parentDoc = window.parent.document;
+        if (!parentDoc.getElementById('ga-gtag')) {{
+            var script1 = parentDoc.createElement('script');
+            script1.id = 'ga-gtag';
+            script1.async = true;
+            script1.src = 'https://www.googletagmanager.com/gtag/js?id={GOOGLE_ANALYTICS_ID}';
+            parentDoc.head.appendChild(script1);
+
+            var script2 = parentDoc.createElement('script');
+            script2.innerHTML = `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){{dataLayer.push(arguments);}}
+                gtag('js', new Date());
+                gtag('config', '{GOOGLE_ANALYTICS_ID}');
+            `;
+            parentDoc.head.appendChild(script2);
+        }}
+    }})();
+    </script>
+    """,
+    height=0,
+    width=0,
+)
+
+#------------------------------------------------------------------
+# Función para convertir la imagen local a Base64 y usarla en CSS
+def get_base64_image(image_path):
+    if os.path.exists(image_path):
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    return ""
+
 # Título principal
 st.title("¡Hola, mundo!")
 st.write("Esta es una aplicación básica de Streamlit.")
 
 st.markdown("---")
 
-# Sección para mostrar el script de Google en texto
-st.subheader("Ejemplo de Script de Google (Texto)")
-st.write("Aquí puedes ver el código de un script de Google (por ejemplo, Google Analytics) presentado en texto:")
 
-# Script de ejemplo en texto plano
-google_script_example = """
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=TU_ID_DE_SEGUIMIENTO"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'TU_ID_DE_SEGUIMIENTO');
-</script>
-"""
-
-# Mostrar el script dentro de un bloque de código con sintaxis HTML
-st.code(google_script_example, language="html")
