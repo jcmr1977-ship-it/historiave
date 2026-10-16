@@ -110,7 +110,7 @@ if st.button("Consultar", type="primary"):
                         {"role": "system", "content": SYSTEM_PROMPT},
                         {"role": "user", "content": user_input}
                     ],
-                    model="openai/gpt-oss-20b",
+                    model="gemini-3.8-ai",
                     temperature=0.3,
                     max_tokens=2048
                 )
