@@ -7,28 +7,22 @@ st.set_page_config(
     page_icon="👋",
     layout="centered"
 )
-
-# --- GOOGLE ANALYTICS (INYECCIÓN EN EL HEAD REAL) ---
-GOOGLE_ANALYTICS_ID = "G-YCZN022HR5"
-
 components.html(
     """
     <script>
-        document.head.appendChild(
-            document.createTextNode("<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCZN022HR5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-YCZN022HR5');
-</script>")
-        );
+    (function() {
+        var head = window.parent.document.head;
+        var node = window.parent.document.createTextNode("Hello from Streamlit");
+        head.appendChild(node);
+    })();
     </script>
     """,
     height=0, width=0,
 )
+# --- GOOGLE ANALYTICS (INYECCIÓN EN EL HEAD REAL) ---
+GOOGLE_ANALYTICS_ID = "G-YCZN022HR5"
+
+
 
 #------------------------------------------------------------------
 # Función para convertir la imagen local a Base64 y usarla en CSS
