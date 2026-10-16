@@ -1,140 +1,34 @@
-import os
-import base64
 import streamlit as st
-import google.generativeai as genai
 
-# 1. Configuración de la Página de Streamlit
+# Configuración básica de la página
 st.set_page_config(
-    page_title="Historia y Cultura Venezolana - IA",
-    page_icon="VE",
+    page_title="Mi App Hola Mundo",
+    page_icon="👋",
     layout="centered"
 )
 
-# Función para convertir la imagen local a Base64 y usarla en CSS
-def get_base64_image(image_path):
-    if os.path.exists(image_path):
-        with open(image_path, "rb") as img_file:
-            return base64.b64encode(img_file.read()).decode()
-    return ""
+# Título principal
+st.title("¡Hola, mundo!")
+st.write("Esta es una aplicación básica de Streamlit.")
 
-# Reemplaza 'fondo_marca_agua.png' por el nombre exacto de tu archivo de imagen en el repositorio
-img_base64 = get_base64_image("venezolaria.jpeg")
+st.markdown("---")
 
-# 2. Inyección de CSS para la marca de agua y legibilidad
-if img_base64:
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image: linear-gradient(rgba(255, 255, 255, 0.70), rgba(255, 255, 255, 0.40)), 
-                              url("data:image/png;base64,{img_base64}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }}
-        .custom-box {{
-            background-color: rgba(255, 255, 255, 0.60);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border-left: 5px solid #1e3a8a;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    
-# 2. Configuración de la API Key de Gemini
-# Intenta leer desde st.secrets (para Streamlit Cloud) o de variables de entorno locales
-try:
-    GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
-except Exception:
-    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
+# Sección para mostrar el script de Google en texto
+st.subheader("Ejemplo de Script de Google (Texto)")
+st.write("Aquí puedes ver el código de un script de Google (por ejemplo, Google Analytics) presentado en texto:")
 
-if not GOOGLE_API_KEY:
-    st.error("⚠️ No se ha configurado la `GOOGLE_API_KEY`. Por favor, añádela en los Secrets de Streamlit o en tu entorno local.")
-    st.stop()
+# Script de ejemplo en texto plano
+google_script_example = """
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=TU_ID_DE_SEGUIMIENTO"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-genai.configure(api_key=GOOGLE_API_KEY)
-
-# 3. Definición del Prompt del Sistema (Restricción temática estricta)
-SYSTEM_PROMPT = """
-Eres un asistente virtual experto e historiador especializado exclusivamente en Venezuela. 
-Tu ámbito de conocimiento y respuesta se limita de forma estricta a los siguientes aspectos de Venezuela:
-- Historia política, económica, cultural, popular, académica, sanitaria, deportiva, artística, tecnológica y urbanística.
-
-Reglas obligatorias:
-1. Si el usuario hace una pregunta que NO está relacionada con Venezuela o con las áreas temáticas mencionadas anteriormente, debes rechazar amablemente la consulta indicando que tu enfoque es exclusivamente la historia, cultura y desarrollo dominicano.
-2. Mantén un tono académico, respetuoso, riguroso y amigable.
-3. Proporciona contexto histórico y datos precisos cuando respondas.
+  gtag('config', 'TU_ID_DE_SEGUIMIENTO');
+</script>
 """
 
-# 4. Inicialización del Modelo Gemini (Usando gemini-3.8-flash por velocidad y eficiencia)
-@st.cache_resource
-def load_gemini_model():
-    # Configuramos el modelo con instrucciones de sistema incorporadas en el prompt inicial o rol
-    model = genai.GenerativeModel(
-        model_name="gemini-3.8-flash",
-        system_instruction=SYSTEM_PROMPT
-    )
-    return model
-
-model = load_gemini_model()
-
-# 5. Inicialización de Estados en Session State
-if "current_question" not in st.session_state:
-    st.session_state.current_question = ""
-if "current_response" not in st.session_state:
-    st.session_state.current_response = ""
-
-# --- ORDEN VISUAL DE LA INTERFAZ ---
-
-# A. TÍTULO PRINCIPAL
-st.title("🇩🇴 Asistente Histórico y Cultural de Venezuela")
-
-# B. SUBTÍTULO
-st.markdown("Consulta un tema a la vez sobre historia, economía, cultura, deporte, urbanismo y más. Impulsado por Gemini.")
-
-# C. CAJA DE TEXTO DE LA PREGUNTA
-user_input = st.text_input("Escribe tu pregunta sobre Venezuela:", value="", key="input_pregunta")
-
-if st.button("Consultar", type="primary"):
-    if user_input.strip():
-        st.session_state.current_question = user_input
-        with st.spinner("Consultando con Gemini..."):
-            try:
-                #client = Groq(api_key=GROQ_API_KEY)
-                chat_completion = client.chat.completions.create(
-                    messages=[
-                        {"role": "system", "content": SYSTEM_PROMPT},
-                        {"role": "user", "content": user_input}
-                    ],
-                    model="gemini-3.8-ai",
-                    temperature=0.3,
-                    max_tokens=2048
-                )
-                st.session_state.current_response = chat_completion.choices[0].message.content
-            except Exception as e:
-                st.session_state.current_response = f"❌ Ocurrió un error al procesar tu solicitud con Groq: {e}"
-    else:
-        st.warning("Por favor, escribe una pregunta antes de consultar.")
-
-# D. RESPUESTA ABAJO (Si ya fue consultada)
-if st.session_state.current_response:
-    st.markdown("---")
-    st.subheader("📌 Pregunta realizada:")
-    st.markdown(f'<div class="custom-box"><b>{st.session_state.current_question}</b></div>', unsafe_allow_html=True)
-    
-    st.subheader("🇩🇴 Respuesta:")
-    st.markdown(f'<div class="custom-box">{st.session_state.current_response}</div>', unsafe_allow_html=True)
-    st.caption("⚡ Estos es una IA y puede cometer errores. *Generado mediante Groq (openai/gpt-oss-20b)*")
-   
-    st.markdown("---")
-    
-    # E. BOTÓN DE PRÓXIMA PREGUNTA (Abajo de todo)
-    if st.button("🔄 Próxima pregunta", type="secondary"):
-        st.session_state.current_question = ""
-        st.session_state.current_response = ""
-    #    st.session_state.input_pregunta = ""
-        st.rerun()
+# Mostrar el script dentro de un bloque de código con sintaxis HTML
+st.code(google_script_example, language="html")
