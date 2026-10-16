@@ -15,10 +15,6 @@ components.html(
     """,
     height=0, width=0,
 )
-# --- GOOGLE ANALYTICS (INYECCIÓN EN EL HEAD REAL) ---
-GOOGLE_ANALYTICS_ID = "G-YCZN022HR5"
-
-
 
 #------------------------------------------------------------------
 # Función para convertir la imagen local a Base64 y usarla en CSS
