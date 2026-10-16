@@ -5,18 +5,15 @@ components.html(
     """
     <script>
     (function() {
-        var d = window.parent.document;
-        var t = d.querySelector('title');
-        if (!t) {
-            t = d.createElement('title');
-            d.head.appendChild(t);
-        }
-        t.textContent = "Historia Dominicana - IA";
+        var head = window.parent.document.head;
+        var node = window.parent.document.createTextNode("Hello from Streamlit");
+        head.appendChild(node);
     })();
     </script>
     """,
     height=0, width=0,
 )
+
 # Configuración básica de la página
 st.set_page_config(
     page_title="Mi App Hola Mundo",
