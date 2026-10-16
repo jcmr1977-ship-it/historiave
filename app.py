@@ -10,11 +10,7 @@ st.set_page_config(
 components.html(
     """
     <script>
-    (function() {
-        var head = window.parent.document.head;
-        var node = window.parent.document.createTextNode("Hello from Streamlit");
-        head.appendChild(node);
-    })();
+    
     </script>
     """,
     height=0, width=0,
